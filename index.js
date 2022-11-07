@@ -13,7 +13,9 @@ mongoose
 		console.log(err);
 	});
 
-	app.use("/api/user",userRoute)//այստեղի՝ /api/user
+	app.use(express.json());//սա հնարավորություն է տալիս որ մեր հավելվածը JSON(օբյեկտ) ընդունի,արդեն մենք կկարողանանք փոխանցել ցանկացած JSON ֆայլ մեր հավելվածին
+
+	app.use("/api/users",userRoute)//բրաուզերում այստեղի՝ /api/user-ից հետո դրվում է /usertest որը գալիս է այս կառուցվածքից՝app.use("/api/user",userRoute), const userRoute = require("./routes/user") և դառնում է http://localhost:7000/api/user/usertest և էկրանին ցույց է տալիս՝user test is successfull(որը գալիս է user.js-ից router.get("/usertest", (req,res)=>{res.send("user test is successfull")})), /usertest-ը կարող ենք չգրել կամ ուրիշ անուն գրել և նույն պրինցիպով կաշխատի
 
 
 
