@@ -1,6 +1,13 @@
 //ստեղծենք օգտագործողի(user) rout-ը(երթուղին, ուղին)
+const User = require("../models/User");
+const {
+  verifyToken,
+  verifyTokenAndAuthorization,
+  verifyTokenAndAdmin,
+} = require("./verifyToken");
 
 const router=require("express").Router();//Express.Router () ֆունկցիան օգտագործվում է նոր router օբյեկտ ստեղծելու համար։ Այս ֆունկցիան օգտագործվում է, երբ ցանկանում եք ձեր ծրագրում ստեղծել նոր router օբյեկտ՝ հարցումները կարգավորելու համար: Բազմաթիվ հարցումները կարելի է հեշտությամբ տարբերակել Express.js-ում Router() ֆունկցիայի օգնությամբ:
+
 
 //սա գրվել է փորձարկման համար
 // router.get("/usertest", (req,res)=>{// get-ստացիր
@@ -13,12 +20,34 @@ const router=require("express").Router();//Express.Router () ֆունկցիան 
 //     res.send("your userName is:" + userName )//postman-ում սաքրել եմ  {"userName": "ArmMar"} այս JSON օբյեկտը, և երբ send(ուղարկել) եմ անում բերում է այս տեքստը՝ your userName is:ArmMar, երբ այստեղ {"userName": "Karen"} նշեմ օրինակ Karen send անելուց հետո կբերի your userName is:Karen
 // })
 
-// user@ կարող է գրանցվել և մուտք գործել, բայց դա անելը user-ի rout-ի
+//UPDATE-user-ի տվյալների թարմացում
+//:id-ն յուզեռի id-ն է, այն պարամետր է
+router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {//ստուգել token-ը և թույլտվությունը(Authorization)
+	if (req.body.password) {
+	  req.body.password = CryptoJS.AES.encrypt(
+		req.body.password,
+		process.env.PASS_SEC
+	  ).toString();
+	}
+  
+	try {
+	  const updatedUser = await User.findByIdAndUpdate(
+		req.params.id,
+		{
+		  $set: req.body,
+		},
+		{ new: true }
+	  );
+	  res.status(200).json(updatedUser);
+	} catch (err) {
+	  res.status(500).json(err);
+	}
+  });
 
 
 
 
-module.exports = router; //ինչու է այս գրելաձևով արտահանում ???
+module.exports = router; //ինչու է այս գրելաձևով արտահանում 
 
 
 
