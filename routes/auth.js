@@ -40,6 +40,7 @@ router.post('/login', async (req, res) => {// ինչպես վերևում այս
 
       !user && res.status(401).json("Wrong User Name")//սա պայման է որ եթե չկա փնտրվող user-ը, ստատուս տանք 401 ու կուղարկենք նամակ սխալի(eror)-ի մասին՝Wrong User Name։ 
 
+      //ներքևի տողում մեր կոդը decrypt(վերծանել) ենք անում հետո վերածում ենք տեքստի(string-ի)՝ hashedPassword.toString(CryptoJS.enc.Utf8) որպեսզի երբ որ user-ը կայքում հավաքի իր password-ը քանի որ յուզեռի հավաքած password-ը string է մենք այդ password-ը կարողանանք համեմատել դատաբազայում ֆիքսված password-ի հետ, որպեսզի string@ համեմատենք string-ի հետ
       const hashedPassword = CryptoJS.AES.decrypt(//decrypt() մեթոդի միջոցով (https://cryptojs.gitbook.io/docs/) վերծանում ենք մեր user-ի 
           user.password,//password-ը
           process.env.PASS_SEC// և գաղտնի բանալին(secret key)
@@ -68,7 +69,7 @@ router.post('/login', async (req, res) => {// ինչպես վերևում այս
    // առկա է մի խնդիր որ postman-ում երևում է յուզեռի գաղտնաբառը, եթե նույնիսկ ոչ ոք չգիտի մեր գաղտնի բանալին(secret key), մենք երբեք չպետք է բացահայտենք գաղտնաբառը, օգտատիրոջը կուղարկենք բոլոր տվյալները բացի password-ից
   //քանի որ mongodb-ն պահպանում է մեր փաստաթղթերը որպես արժեք _doc բանալիի(object key) ներքո որը որոշակի տարօրինակ ձևով կուղարկի հաճախորդին իր տվյալները , դրա համար ներքևի տողում գրում ենք՝ user._doc որպեսզի վերցնի _doc բանալիի միայն արժեքը, այդ ժամանակ հաճախորդին կուղարկվի բոլոր տվյալները բացի password-ից    
   //այստեղ password փոփոխականի մեջ պահում է password-ը իսկ others փոփոխականի մեջ պահում է user._doc-ը, եթե password-ի կողքը ստորակետ դնենք ու գրենք օրինակ email, ինքը ընդհանուրի միջից email-նել կհանի կպահի email փոփոխականի մեջ,others-ի փոխարեն կարա լինի ցանկացած այլ անուն ինքը նույն ձևի կաշխատի 
-  const { password, ...others } = user._doc;//password-ը թաքցնելու համար օգտագործում ենք spred(...) օպերատորը որպեսզի user-ին ուղարկենք բոլոր տեղեկությունները(...others-մյուսները,մյուս տվյալները՝username-ն, email-ը և այլն) բացի password-ից, այս տողի կոդը ECMASCRIPT6-ի սինտաքս է 
+  const { password,...others } = user._doc;//password-ը թաքցնելու համար օգտագործում ենք spred(...) օպերատորը որպեսզի user-ին ուղարկենք բոլոր տեղեկությունները(...others-մյուսները,մյուս տվյալները՝username-ն, email-ը և այլն) բացի password-ից, այս տողի կոդը ECMASCRIPT6-ի սինտաքս է 
    
   //եթե գտնվում է փնտրվող user-ը իրեն ներքևի կոդով ուղարկում ենք բոլոր մյուս տվյալները բացի password-ից ինչպես նաև accessToken-ը  
    

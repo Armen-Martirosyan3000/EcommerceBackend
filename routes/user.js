@@ -22,25 +22,28 @@ const router=require("express").Router();//Express.Router () ֆունկցիան 
 
 //UPDATE-user-ի տվյալների թարմացում
 //:id-ն յուզեռի id-ն է, այն պարամետր է
+//այստեղ մենք ասում ենք ստուգել token-ը և թույլտվությունը(verifyTokenAndAuthorization)
 router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {//ստուգել token-ը և թույլտվությունը(Authorization)
-	if (req.body.password) {
+	if (req.body.password) {//մինչև UPDATE անելը մենք ստուգում ենք password-ը, որովհետև user-ը կարող է փոխել իր password-ը և այդ դեպքում մենք կրկին պետք է encrypt(ծածկագրել,գաղտնագրել) անենք user-ի նոր password-ը
 	  req.body.password = CryptoJS.AES.encrypt(
 		req.body.password,
 		process.env.PASS_SEC
 	  ).toString();
-	}
+	}//սրանից հետո նոր մենք կարող ենք թարմացնել մեր user-ին
   
-	try {
-	  const updatedUser = await User.findByIdAndUpdate(
-		req.params.id,
-		{
-		  $set: req.body,
+	try {//այստեղ մենք կասենք try փորձել թարմացնել user-ին՝updatedUser
+		//Mongoose-ի Գործառույթներից մեկը findByIdAndUpdate() -ն է, որն իսկապես օգտակար է տվյալների բազայում թարմացման գործողություններ կատարելու համար: Իհարկե, Mongoose գրադարանում կան բազմաթիվ թարմացման գործառույթներ տվյալների բազայում տվյալների թարմացման համար, բայց findByIdAndUpdate()-ը հիմնականում օգտագործվում է իր պարզության և ճկունության պատճառով:Մենք գիտենք, որ MongoDB-ում յուրաքանչյուր փաստաթուղթ ունի իր ուրույն ավտոմատ ստեղծվող  _id դաշտը: Այս  ID-  ն փոխանցվում է  findByIdAndUpdate() ֆունկցիայի ներսում։ Այդ համապատասխան ID-ով փաստաթուղթը ստանալուց հետո այն պարզապես թարմացնում է փաստաթղթի ներսում եղած տվյալները:
+	  const updatedUser = await User.findByIdAndUpdate(//User-ը User մոդելն է և կասենք id-ով գտիր ու թարմացրու՝ findByIdAndUpdate(գտնել ըստ ID-ի և թարմացնել)
+		req.params.id,// թարմացվող user-ի id-ն է
+		{//այստեղ գրել ենք այն ինչը պատրաստվում ենք թարմացնել, հիմնականում վերցնում են ամեն ինչ հարցման ներսում և body-ն($set: req.body) ու սահմանեք իրեն կրկին
+			//$set մեթոդ-ը օգտագործվում է օբյեկտի հատկությանը արժեք նշանակելու համար, որը տրված է property(հատկություն) անունը որպես տող:$setնաև պարամետրացված հատկության արժեքը սահմանելու միակ միջոցն է:  
+		  $set: req.body,//ինչպես ենք պատրաստվում սահմանել նոր ինֆորմացիամեր յուզեռի համար
 		},
-		{ new: true }
+		{ new: true }//սրանով մենք վերադարձնում ենք թարմացված user-ին
 	  );
-	  res.status(200).json(updatedUser);
+	  res.status(200).json(updatedUser);// եթե ամեն ինչ նորմալ է ուղարկում ենք սա՝updatedUser(թարմացված user)
 	} catch (err) {
-	  res.status(500).json(err);
+	  res.status(500).json(err);//եթե էռոռ կա ուղարկում ենք err
 	}
   });
 
