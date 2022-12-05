@@ -1,29 +1,40 @@
+//mongo.db-ում տալիս ենք IP հասցե որ կարողանանք կարդալ մեր տվյալների բազան, մենք դրել ենք՝ 0․0․0․0, դա նշանակում է որ յուրաքանչյուր սերվեր կարող է հասնել մեր db-ին, քանի որ մենք աշխատում ենք localhost-ի վրա կարող ենք այն թողնել այդպես, բայց եթե մենք տեղակայում ենք մեր հավելվածը, պետք է չափորոշենք սերվերի IP-ն։
+//MongoDB-ում տվյալները պահվում են JSON ձևաչափով: Ավելի ճիշտ, տվյալները պահվում են BSON ձևաչափով։ BSON ձևաչափն ապահովում է տվյալների մի շարք տեսակներ: Մենք կարող ենք տվյալներ տեղադրել mongo shell-ից կամ mongoose-ի միջոցով: Երկու դեպքում էլ _id դաշտը ստեղծվում է ավտոմատ կերպով յուրաքանչյուր փաստաթղթում: _id դաշտը գործում է որպես հիմնական բանալի: Այն եզակի է ամբողջ հավաքածուի ընթացքում: Բայց կա մեկ տարբերություն, երբ փաստաթուղթ(ներ)ը տեղադրվում է մանգուստի միջոցով: Այն ավտոմատ կերպով ստեղծում է ևս մեկ դաշտ: Այս դաշտը __v դաշտն է: app.use("/api/auth", authRoute) տողում գրված է __v դաշտի բացատրությունը
+//BSON-ը հիմնված է JSON-ի վրա, սակայն ունի առանձնահատկություններ:BSON-ը երկուական կոդավորված Javascript Object Notation (JSON) է՝ Javascript օբյեկտի նշում, որը լայնորեն օգտագործվում է տվյալների փոխանցման և պահպանման համար վեբ վրա հիմնված հավելվածներում: BSON-ն ընդլայնվել է՝ ավելացնելու որոշ կամընտիր ոչ JSON-ի բնիկ տվյալների տեսակներ, ինչպիսիք են ամսաթվերը և երկուական տվյալները:JSON-ն ավելի հեշտ է հասկանալ, քանի որ այն ընթեռնելի է մարդու կողմից, բայց BSON-ի համեմատությամբ այն աջակցում է տվյալների ավելի քիչ տեսակներ: Json-ի համեմատ BSON տվյալները մի փոքր ավելի մեծ են բայթի չափով, BSON-ը ստեղծվում են մեքենայի միջոցով և ընթեռնելի չեն մարդու կողմից այդ պատճառով դրանք վերլուծվում են: Ի տարբերություն JSON-ի, BSON-ն առաջարկում է տվյալների լրացուցիչ տեսակներ, ինչպիսիք են binata երկուական տվյալների համար, տասնորդական128 թվային տվյալների համար:
+//JSON-ը Օգտագործվում է ցանցի միջոցով տվյալներ ուղարկելու համար (հիմնականում API-ների միջոցով):
+//Տվյալների բազաները օգտագործում են BSON-ը տվյալների պահպանման համար:
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const userRoute = require("./routes/user");
-const authRoute = require("./routes/auth");
+const dotenv=require("dotenv");//.env ֆայլն օգտագործելու այսպես ներմուծում ենք dotenv-ն 
+const userRoute = require("./routes/user");//այստեղով require(պահանջում ենք, ներմուծում ենք) routes պապկայի user․js ֆայլը և այն դնում ենք userRoute փոփոխականի մեջ
+const authRoute = require("./routes/auth");//այստեղով require(պահանջում ենք, ներմուծում ենք) routes պապկայի auth․js ֆայլը և այն դնում ենք authRoute փոփոխականի մեջ
 const productRoute = require("./routes/product");
-const cartRoute = require("./routes/cart");
-const orderRoute = require("./routes/order");
+ const cartRoute = require("./routes/cart");
+ const orderRoute = require("./routes/order");
+const stripeRoute = require("./routes/stripe");
+const cors = require("cors");
 
-dotenv.config();
+
+dotenv.config();//dotenv մոդուլ է, որը բեռնում է շրջակա միջավայրի փոփոխականները ձեր ստեղծած .env ֆայլից և ավելացնում դրանք process.env օբյեկտին, որն այնուհետև հասանելի է դառնում հավելվածին: config()մեթոդ է, որը տրամադրվում է dotenv մոդուլի կողմից env ֆայլերը կարգավորելու համար:Շրջակա միջավայրի փոփոխականները(Environment variables) մեր հավելվածից դուրս փոփոխականներ են, որոնք գտնվում են ՕՀ-ում կամ գործում են հավելվածի կոնտեյները: Սովորաբար մեր հավելվածները պահանջում են բազմաթիվ փոփոխականներ: Առանձնացնելով մեր կոնֆիգուրացիաները՝ մեր հավելվածը հեշտությամբ կարող է տեղակայվել այլ միջավայրում, և մենք ստիպված չենք լինի փոխել հավելվածի կոդը և այն վերակառուցել:Պայմանականորեն փոփոխականները գրված են մեծատառով օրինակ՝ «DB_NAME», իսկ արժեքները տողեր են: 
+
 
 mongoose
-	.connect(process.env.MONGO_URL)
-	.then(() => console.log("DB Connection Successfull!"))
-	.catch((err) => {
+	.connect(process.env.MONGO_URL)//mongoose-ով մենք միացնում ենք մեր հավելվածը mongodb-ին:Link-ը վերցնում եմ mongodb-ից, որի մեջ 2 փոփոխություն եմ անում <password>-ի փոխարեն գրում եմ իմ userName(mongodb-ում գրանցված) և ավելացնում եմ shop(db-ի անունը, որը դնում ենք ասենք shop)		
+	.then(() => console.log("DB Connection Successfull!"))// սա նշանակում է եթե հաջողվի console.log կանի DB Connection Successfull-DB կապը հաջող է
+	.catch((err) => {//իսկ եթե սխալ լինի console.log(err) կանի err
 		console.log(err);
 	});
 
-app.use(express.json());
-app.use("/api/auth", authRoute);
-app.use("/api/users", userRoute);
-app.use("/api/products", productRoute);
-app.use("/api/carts", cartRoute);
-app.use("/api/orders", orderRoute);
+	app.use(cors());
+	app.use(express.json());//սա հնարավորություն է տալիս որ մեր հավելվածը JSON(օբյեկտ) ընդունի,արդեն մենք կկարողանանք փոխանցել ցանկացած JSON ֆայլ մեր հավելվածին
+	app.use("/api/auth", authRoute);//բրաուզերում այստեղի՝ /api/auth-ից հետո դրվում է /register որը գալիս է այս կառուցվածքից՝app.use("/api/user",authRoute), const authRoute = require("./routes/auth") և դառնում է localhost:7000/api/auth/register և postaman-ի էկրանին ցույց է տալիս նոր գրանցված user-ի անունը, id-ն և այլն(որը գալիս է auth.js-ից router.post("/register", async (req, res) => {})), /register-ը կարող ենք չգրել կամ ուրիշ անուն գրել և նույն պրինցիպով կաշխատի։ նոր user-ը գրանցվելուց հետո իր տվյալներում(postman, MONGO DB) առկա ՝ __v դաշտ, որը ստեղծվում է միայն այն դեպքում, երբ փաստաթուղթ(ներ)ը տեղադրվում է mongoose-ի միջոցով։__v դաշտը կոչվում է տարբերակի բանալի: Այն նկարագրում է փաստաթղթի ներքին վերանայումը(update): Այս __v դաշտն օգտագործվում է փաստաթղթի վերանայումները հետևելու համար: Լռելյայն, դրա արժեքը զրո է: Իրական պրակտիկայում __v դաշտն ավելանում է մեկով միայն այն ժամանակ, երբ զանգվածը թարմացվում է: Այլ իրավիճակներում __v դաշտի արժեքը մնում է անփոփոխ: 
+	app.use("/api/users", userRoute);//բրաուզերում այստեղի՝ /api/user-ից հետո դրվում է /usertest որը գալիս է այս կառուցվածքից՝app.use("/api/user",userRoute), const userRoute = require("./routes/user") և դառնում է http://localhost:7000/api/user/usertest և էկրանին ցույց է տալիս՝user test is successfull(որը գալիս է user.js-ից router.get("/usertest", (req,res)=>{res.send("user test is successfull")})), /usertest-ը կարող ենք չգրել կամ ուրիշ անուն գրել և նույն պրինցիպով կաշխատի
+    app.use("/api/products", productRoute);
+	app.use("/api/carts", cartRoute);
+    app.use("/api/orders", orderRoute);
+	app.use("/api/checkout", stripeRoute);
 
-app.listen(process.env.PORT || 7000, () => {
+	app.listen(process.env.PORT || 7000, () => {//սա նշանակում է որ եթե մեր .env ֆայլում PORT-ի համար չկա օգտագործենք 7000-ը
 	console.log("Backend server is running!")
 });
