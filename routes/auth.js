@@ -8,20 +8,35 @@ const jwt = require("jsonwebtoken");
 
 router.post("/register", async (req, res) => {
   const newUser = new User({
+    name: req.body.name,
+    lastname: req.body.lastname,
     username: req.body.username,
     email: req.body.email,
     password: CryptoJS.AES.encrypt(
       req.body.password,
       process.env.PASS_SEC
     ).toString(),
+    confirmpassword: CryptoJS.AES.encrypt(
+      req.body.confirmpassword,
+      process.env.PASS_SEC
+    ).toString(),
   });
+  const password = req.body.password;
+  const confirmpassword = req.body.confirmpassword;
+
   try {
-    const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
+    if (password === confirmpassword) {
+      const savedUser = await newUser.save();
+      res.status(201).json(savedUser);
+    }
+    else {
+      res.status(500).json("confirmPassword does not match password");
+    }
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("A user with this username or email exists");
   }
 });
+
 
 //Login user
 
@@ -55,7 +70,7 @@ router.post('/login', async (req, res) => {
     const { password, ...others } = user._doc;
     res.status(200).json({ ...others, accessToken });
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("something went wrong please try again");
   }
 });
 
