@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const stripe = require("stripe")(process.env.STRIPE_KEY);//սրանով stripe-ից վերցրած տոկեն-ը որ դրել ենք env ֆայլում, մենք կկարողանանք օգտագործել
+const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 router.post("/payment", (req, res) => {
 

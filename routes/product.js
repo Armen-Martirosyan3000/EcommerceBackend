@@ -14,7 +14,7 @@ router.post("/", verifyTokenAndAdmin, async (req, res) => {
     const savedProduct = await newProduct.save();
     res.status(200).json(savedProduct);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("something went wrong please try again");
   }
 });
 
@@ -32,7 +32,7 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
     );
     res.status(200).json(updatedProduct);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("something went wrong please try again");
   }
 });
 
@@ -44,7 +44,7 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
     await Product.findByIdAndDelete(req.params.id);
     res.status(200).json("Product has been deleted...");
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("something went wrong please try again");
   }
 });
 
@@ -56,7 +56,7 @@ router.get("/find/:id", async (req, res) => {
     const product = await Product.findById(req.params.id);
     res.status(200).json(product);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("something went wrong please try again");
   }
 });
 
@@ -81,7 +81,7 @@ router.get("/", async (req, res) => {
     }
     res.status(200).json(products);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("something went wrong please try again");
   }
 });
 

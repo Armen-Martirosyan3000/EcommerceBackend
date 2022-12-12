@@ -19,7 +19,7 @@ router.post("/", verifyToken, async (req, res) => {
 
   Order.find({}, async (err, orders) => {
     if (err) {
-      return res.status(500).json(err)
+      return res.status(500).json("something went wrong please try again")
     }
     if (req.user.isAdmin) {
       const savedOrder = await newOrder.save();
@@ -49,7 +49,7 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
     );
     res.status(200).json(updatedOrder);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("something went wrong please try again");
   }
 });
 
@@ -61,7 +61,7 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
     await Order.findByIdAndDelete(req.params.id);
     res.status(200).json("Order has been deleted...");
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("something went wrong please try again");
   }
 });
 
@@ -73,7 +73,7 @@ router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
     const orders = await Order.find({ userId: req.params.userId });
     res.status(200).json(orders);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("something went wrong please try again");
   }
 });
 
@@ -85,7 +85,7 @@ router.get("/", verifyTokenAndAdmin, async (req, res) => {
     const orders = await Order.find();
     res.status(200).json(orders);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("something went wrong please try again");
   }
 });
 
@@ -114,7 +114,7 @@ router.get("/income", verifyTokenAndAdmin, async (req, res) => {
     ]);
     res.status(200).json(income);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("something went wrong please try again");
   }
 });
 

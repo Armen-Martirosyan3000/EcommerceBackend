@@ -20,7 +20,7 @@ router.post("/", verifyToken, (req, res) => {
   Cart.find({}, async (err, carts) => {
     console.log(carts);
     if (err) {
-      return res.status(500).json(err)
+      return res.status(500).json("something went wrong please try again")
     }
     if (carts.some(cart => newCart.userId === cart.userId && req.user.isAdmin)) {
       return res.status(500).json("this user already has a cart created")
@@ -32,7 +32,7 @@ router.post("/", verifyToken, (req, res) => {
     )) {
       return res.status(500).json("this user already has a cart created")
     } else if (newCart.userId !== decodedToken.id) {
-      return res.status(500).json("You are not alowed to do that!")
+      return res.status(500).json("You are not allowed to do that!")
     }
     else {
       const savedCart = await newCart.save();
@@ -56,7 +56,7 @@ router.put("/:userId/:id", verifyTokenAndAuthorization, async (req, res) => {
     );
     res.status(200).json(updatedCart);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("something went wrong please try again");
   }
 });
 
@@ -68,19 +68,19 @@ router.delete("/:userId/:id", verifyTokenAndAuthorization, async (req, res) => {
     await Cart.findByIdAndDelete(req.params.id);
     res.status(200).json("Cart has been deleted...");
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("something went wrong please try again");
   }
 });
 
 
 //Get user cart
 
-router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {//userId-ին օգտոգործողի id-ն է(user-ի նույնականացուցիչը)
+router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
   try {
-    const cart = await Cart.findOne({ userId: req.params.userId });// ամեն user ունի ընդհամենը 1 cart(զամբյուղ) դրա համար գրում ենք findOne ֆունկցիան,FindOne () մեթոդը գտնում և վերադարձնում է մեկ փաստաթուղթ, որը համապատասխանում է տվյալ ընտրության չափանիշներին: Եթե ​​մի քանի փաստաթղթեր բավարարում են հարցման տրված արտահայտությունը, ապա այս մեթոդը կվերադարձնի առաջին փաստաթուղթը բնական կարգով, որն արտացոլում է սկավառակի վրա փաստաթղթերի հերթականությունը: Եթե ​​ոչ մի փաստաթուղթ չի համապատասխանում ընտրության չափանիշներին, ապա այս մեթոդը կվերադարձնի անվավեր: Այն պահանջում է երկու պարամետր, առաջինը հարցման չափանիշն է, իսկ մյուսը կամընտիր է:
+    const cart = await Cart.findOne({ userId: req.params.userId });
     res.status(200).json(cart);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("something went wrong please try again");
   }
 });
 
@@ -92,7 +92,7 @@ router.get("/", verifyTokenAndAdmin, async (req, res) => {
     const carts = await Cart.find();
     res.status(200).json(carts);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("something went wrong please try again");
   }
 });
 
