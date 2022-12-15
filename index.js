@@ -9,6 +9,7 @@ const productRoute = require("./routes/product");
 const cartRoute = require("./routes/cart");
 const orderRoute = require("./routes/order");
 const stripeRoute = require("./routes/stripe");
+const router= require('./routes/nodeMailerRouter')
 const cors = require("cors");
 
 
@@ -26,6 +27,7 @@ app.use("/api/products", productRoute);
 app.use("/api/carts", cartRoute);
 app.use("/api/orders", orderRoute);
 app.use("/api/checkout", stripeRoute);
+app.use(router);
 
 app.listen(process.env.PORT || 7000, () => {
 	console.log("Backend server is running!")
