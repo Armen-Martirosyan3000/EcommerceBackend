@@ -33,7 +33,7 @@ router.post("/register", async (req, res) => {
       res.status(500).json("confirmPassword does not match password");
     }
   } catch (err) {
-    res.status(500).json("A user with this username or email exists");
+    res.status(500).json("A user with this username or email already exists, or the email does not contain the @ symbol");
   }
 });
 
