@@ -27,9 +27,7 @@
 
 ## Installing
 
- * git clone https://github.com/Armen-Martirosyan3000/EcommerceBackend
- * cd EcommerceBackend
- * npm install
+ ``` git clone https://github.com/Armen-Martirosyan3000/EcommerceBackend cd EcommerceBackend npm install ```
 
 ## Getting Started
  To test the application
