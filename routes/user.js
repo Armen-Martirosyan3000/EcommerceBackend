@@ -49,7 +49,6 @@ router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
 	try {
 		const user = await User.findById(req.params.id);
 		const { password, ...others } = user._doc;
-		console.log(user)
 		res.status(200).json(others);
 	} catch (err) {
 		res.status(500).json("something went wrong please try again");

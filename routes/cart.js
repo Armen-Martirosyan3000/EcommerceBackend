@@ -18,7 +18,6 @@ router.post("/", verifyToken, (req, res) => {
 
   const decodedToken = jwt_decode(jwtToken)
   Cart.find({}, async (err, carts) => {
-    console.log(carts);
     if (err) {
       return res.status(500).json("something went wrong please try again")
     }

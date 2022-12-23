@@ -9,7 +9,6 @@ const verifyToken = (req, res, next) => {
     jwt.verify(token, process.env.JWT_SEC, (err, user) => {
       if (err) res.status(403).json("Token is not valid!");
       req.user = user;
-      console.log(user.id)
       next();
     });
   } else {
@@ -25,7 +24,7 @@ const verifyTokenAndAuthorization = (req, res, next) => {
     if (req.user.id === req.params.userId || req.user.isAdmin) {
       next();
     } else {
-      res.status(403).json("You are not allowed to do that!");// իսկ եթե մուտք գործողը չի համապատասխանում այս՝req.user.id === req.params.id || req.user.isAdmin պայմանին մենք իրեն ուղարկում ենք՝You are not alowed to do that(Ձեզ դա թույլ չի տրվում)
+      res.status(403).json("You are not allowed to do that!");
     }
   });
 };
@@ -38,7 +37,7 @@ const verifyTokenAndAdmin = (req, res, next) => {
     if (req.user.isAdmin) {
       next();
     } else {
-      res.status(403).json("You are not alowed to do that!");
+      res.status(403).json("You are not allowed to do that!");
     }
   });
 };

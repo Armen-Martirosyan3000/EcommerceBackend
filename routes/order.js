@@ -25,7 +25,7 @@ router.post("/", verifyToken, async (req, res) => {
       const savedOrder = await newOrder.save();
       return res.status(200).json(savedOrder);
     } else if (newOrder.userId !== decodedToken.id) {
-      return res.status(500).json("You are not alowed to do that!")
+      return res.status(500).json("You are not allowed to do that!")
     }
     else {
       const savedOrder = await newOrder.save();

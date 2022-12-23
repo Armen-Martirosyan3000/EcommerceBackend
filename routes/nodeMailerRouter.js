@@ -7,7 +7,6 @@ const nodemailer = require("nodemailer");
 
 newsRoute.post("/news", (req, res) => {
 	const { email } = req.body;
-	console.log(email, 555)
 
 	try {
 		const transporter = nodemailer.createTransport({
@@ -27,9 +26,8 @@ newsRoute.post("/news", (req, res) => {
 
 		transporter.sendMail(mailOptions, (error, info) => {
 			if (error) {
-				console.log("Error", error)
+				console.log("Something went wrong...")
 			} else {
-				console.log("Email sent" + info.response);
 				res.status(201).json({ status: 201, info })
 			}
 		})
