@@ -64,10 +64,10 @@ router.post('/login', async (req, res) => {
         isAdmin: user.isAdmin,
       },
       process.env.JWT_SEC,
-      { expiresIn: "3d" }
+      { expiresIn: "2d" }
     );
 
-    const { password, ...others } = user._doc;
+    const { password,confirmpassword, ...others } = user._doc;
     res.status(200).json({ ...others, accessToken });
   } catch (err) {
     res.status(500).json("something went wrong please try again");
