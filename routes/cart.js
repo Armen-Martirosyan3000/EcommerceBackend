@@ -9,7 +9,7 @@ const {
 
 const router = require("express").Router();
 
-//Create cart
+// Create cart
 
 router.post("/", verifyToken, (req, res) => {
   const newCart = new Cart(req.body);
@@ -42,7 +42,7 @@ router.post("/", verifyToken, (req, res) => {
 });
 
 
-//Update cart
+// Update cart
 
 router.put("/:userId/:id", verifyTokenAndAuthorization, async (req, res) => {
   try {
@@ -60,7 +60,7 @@ router.put("/:userId/:id", verifyTokenAndAuthorization, async (req, res) => {
 });
 
 
-//Delete cart
+// Delete cart
 
 router.delete("/:userId/:id", verifyTokenAndAuthorization, async (req, res) => {
   try {
@@ -72,7 +72,7 @@ router.delete("/:userId/:id", verifyTokenAndAuthorization, async (req, res) => {
 });
 
 
-//Get user cart
+// Get user cart
 
 router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
   try {

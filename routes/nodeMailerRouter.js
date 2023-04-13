@@ -3,7 +3,7 @@ const newsRoute = new express.Router();
 const nodemailer = require("nodemailer");
 
 
-//We send email to the client using nodemailer
+// We send email to the client using nodemailer
 
 newsRoute.post("/news", (req, res) => {
 	const { email } = req.body;
